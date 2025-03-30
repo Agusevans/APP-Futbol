@@ -1,6 +1,9 @@
 # Usa una imagen base de OpenJDK
 FROM openjdk:8-jdk-alpine
 
+# Instalar Maven
+RUN apk update && apk add maven
+
 # Establecer el directorio de trabajo
 WORKDIR /app
 
