@@ -1,0 +1,1 @@
+web: java -jar target/APP-Futbol-1.0-SNAPSHOT.jar

@@ -57,7 +57,7 @@ public class Router {
         Spark.get("/partidos/gestion", partidoController::gestionPartidos, Router.engine);
 
         //Spark.post("partidos/reset", partidoController::reset); //TODO: Ver como implementar
-        Spark.post("partidos/load", partidoController::load); //TODO: Ver como implementar
+        //Spark.post("partidos/load", partidoController::load); //TODO: Ver como implementar
 
         JugadorController jugadorController = new JugadorController();
         Spark.post("/jugadores", jugadorController::agregarJugador);

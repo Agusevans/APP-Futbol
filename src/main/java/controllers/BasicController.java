@@ -121,29 +121,6 @@ public class BasicController {
 
     }
 
-    public Response verificarCredenciales(Request request, Response response){ //TODO
-        try {
-            String nombreUsuario = request.queryParams("usuario");
-            String contrasenia = request.queryParams("contrasenia");
-
-            Usuario usuario = this.repoUsuarios.buscarUsuario(nombreUsuario, contrasenia);
-
-            if(usuario == null){
-                response.body("Usuario o contraseña incorrectos");
-                response.status(401);
-            }
-            else {
-                response.body("Usuario validado correctamente");
-                response.status(200);
-            }
-        }
-        catch (Exception e) {
-            response.body("Error al validar usuario: " + e.getMessage());
-            response.status(500);
-        }
-        return response;
-    }
-
     public ModelAndView error(Request request, Response response){
         Map<String, Object> parametros = new HashMap<>();
         parametros.put("error_message", request.body());
