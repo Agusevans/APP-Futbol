@@ -1,0 +1,164 @@
+<!doctype html>
+<html lang="es">
+
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Partidos Activos</title>
+
+    <!-- Bootstrap 5 -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+
+    <!-- Favicons -->
+    <link rel="icon" href="/images/pelota.png" sizes="32x32" type="image/png">
+
+    <style>
+        body {
+            background: url('/images/fondo-futbol.jpg') no-repeat center center fixed;
+            background-size: cover;
+            padding-top: 70px;
+            font-family: 'Poppins', sans-serif;
+            color: white;
+            text-align: center;
+        }
+
+        .card {
+            border-radius: 15px;
+            transition: all 0.3s ease-in-out;
+            background: rgba(255, 255, 255, 0.15);
+            backdrop-filter: blur(10px);
+            color: white;
+            border: none;
+        }
+
+        .card.expanded {
+            background: url('/images/cancha-fondo.jpg') no-repeat center center;
+            background-size: cover;
+        }
+
+        .card:hover {
+            transform: scale(1.05);
+            box-shadow: 0px 6px 20px rgba(255, 255, 255, 0.3);
+        }
+
+        .card-header {
+            background: rgba(0, 123, 255, 0.7);
+            color: white;
+            cursor: pointer;
+            font-weight: bold;
+            border-radius: 10px 10px 0 0;
+            padding: 15px;
+        }
+
+        .hidden-content {
+            display: none;
+            padding: 15px;
+        }
+
+        .team-card {
+            background: rgba(0, 123, 255, 0.7);
+            border-left: 5px solid #ffcc00;
+            padding: 10px;
+            margin-top: 10px;
+            border-radius: 8px;
+            cursor: pointer;
+            color: white;
+        }
+
+        .team-card:hover {
+            background: rgba(0, 123, 255, 0.9);
+        }
+
+        .players-list {
+            display: none;
+            padding-left: 15px;
+        }
+
+        .navbar {
+            background: rgba(0, 0, 0, 0.85) !important;
+        }
+    </style>
+</head>
+
+<body>
+
+<nav class="navbar navbar-expand-md navbar-dark fixed-top">
+    <div class="container">
+        <a class="navbar-brand" href="/index">🏠 Home</a>
+        <div class="d-flex">
+            <span class="navbar-text me-3">👤 Hola {{usuario}}</span>
+            <a class="btn btn-outline-light" href="#" onclick="confirmLogout()">Cerrar Sesión</a>
+        </div>
+    </div>
+</nav>
+
+<main class="container">
+    <div class="bg-dark p-4 rounded shadow-sm mb-4">
+        <h1 class="text-center text-warning">⚽ Partidos Jugados ⚽</h1>
+    </div>
+
+    <div class="row">
+        {{#each partidos}}
+            <div class="col-md-6 mb-4">
+                <div class="card shadow" id="card{{@index}}">
+                    <div class="card-header" onclick="toggleContent('partido{{@index}}', 'card{{@index}}')">
+                        <span>⚽ <strong>Cancha:</strong> {{cancha.nombre}} | 📅 <strong>Fecha:</strong> {{fecha}} 🔽</span>
+                    </div>
+                    <div class="hidden-content" id="partido{{@index}}">
+                        <p><strong>Capacidad:</strong> {{cancha.capacidad}}</p>
+
+                        <!-- Equipo 1 -->
+                        <div class="team-card" onclick="togglePlayers('equipo1{{@index}}')">
+                            <strong>Equipo 1</strong> - Goles: {{equipo1.goles}} 🔽
+                        </div>
+                        <div class="players-list" id="equipo1{{@index}}">
+                            {{#each equipo1.jugadores}}
+                                <p>- {{nombre}}</p>
+                            {{/each}}
+                        </div>
+
+                        <!-- Equipo 2 -->
+                        <div class="team-card" onclick="togglePlayers('equipo2{{@index}}')">
+                            <strong>Equipo 2</strong> - Goles: {{equipo2.goles}} 🔽
+                        </div>
+                        <div class="players-list" id="equipo2{{@index}}">
+                            {{#each equipo2.jugadores}}
+                                <p>- {{nombre}}</p>
+                            {{/each}}
+                        </div>
+                    </div>
+                </div>
+            </div>
+        {{/each}}
+    </div>
+</main>
+
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+<script>
+    function toggleContent(contentId, cardId) {
+        let content = document.getElementById(contentId);
+        let card = document.getElementById(cardId);
+
+        if (content.style.display === "none" || content.style.display === "") {
+            content.style.display = "block";
+            card.classList.add("expanded");
+        } else {
+            content.style.display = "none";
+            card.classList.remove("expanded");
+        }
+    }
+
+    function togglePlayers(id) {
+        let list = document.getElementById(id);
+        list.style.display = list.style.display === "none" ? "block" : "none";
+    }
+
+    function confirmLogout() {
+        if (confirm("¿Estás seguro de que deseas cerrar sesión?")) {
+            window.location.href = "/logout";
+        }
+    }
+</script>
+
+</body>
+</html>
