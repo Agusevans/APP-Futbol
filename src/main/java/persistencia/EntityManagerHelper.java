@@ -23,14 +23,10 @@ public class EntityManagerHelper {
         Map<String, Object> configOverrides = new HashMap<String, Object>();
 
         String[] keys = new String[]{
-                "javax.persistence.jdbc.url",
-                "javax.persistence.jdbc.user",
-                "javax.persistence.jdbc.password",
                 "DATABASE_URL",
-                "hibernate.show_sql",
-                "ddlauto",
-                "javax.persistence.jdbc.driver",
-                "javax.persistence.schema-generation.database.action"
+                "DB_DIALECT",
+                "DB_DRIVER",
+                "ddlauto"
         };
 
         for (String key : keys) {
@@ -52,6 +48,16 @@ public class EntityManagerHelper {
                     configOverrides.put("javax.persistence.jdbc.url", value);
                     configOverrides.put("javax.persistence.jdbc.user", username);
                     configOverrides.put("javax.persistence.jdbc.password", password);
+                }
+
+                if (key.equals("DB_DIALECT")) {
+                    String value = env.get(key);
+                    configOverrides.put("hibernate.dialect", value);
+                }
+
+                if(key.equals("DB_DRIVER")){
+                    String value = env.get(key);
+                    configOverrides.put("hibernate.connection.driver_class", value);
                 }
 
                 if (key.equals("ddlauto")) {
