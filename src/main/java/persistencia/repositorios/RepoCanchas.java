@@ -2,6 +2,7 @@ package persistencia.repositorios;
 
 import domain.Cancha;
 import persistencia.BusquedaCondicional;
+import persistencia.config.Config;
 import persistencia.daos.DAO;
 
 import javax.persistence.criteria.CriteriaBuilder;
@@ -24,13 +25,18 @@ public class RepoCanchas extends Repositorio<Cancha>{
     }
 
     private BusquedaCondicional condicionNombre(String nombre){
-        CriteriaBuilder criteriaBuilder = criteriaBuilder();
-        CriteriaQuery<Cancha> canchaQuery = criteriaBuilder.createQuery(Cancha.class);
-        Root<Cancha> condicionRaiz = canchaQuery.from(Cancha.class);
-        Predicate condicionNombreDeCancha = criteriaBuilder.equal(condicionRaiz.get("nombre"), nombre);
-        canchaQuery.where(condicionNombreDeCancha);
 
-        java.util.function.Predicate<Cancha> condicionNombreDeCanchaMemo = (cancha -> cancha.getNombre().equals(nombre));
+        CriteriaQuery<Cancha> canchaQuery = null; //TODO: MEJORAR EN TODOS LOS REPOS
+        java.util.function.Predicate<Cancha> condicionNombreDeCanchaMemo = null;
+        if(Config.useDataBase) {
+            CriteriaBuilder criteriaBuilder = criteriaBuilder();
+            canchaQuery = criteriaBuilder.createQuery(Cancha.class);
+            Root<Cancha> condicionRaiz = canchaQuery.from(Cancha.class);
+            Predicate condicionNombreDeCancha = criteriaBuilder.equal(condicionRaiz.get("nombre"), nombre);
+            canchaQuery.where(condicionNombreDeCancha);
+        }
+        else
+            condicionNombreDeCanchaMemo = (cancha -> cancha.getNombre().equals(nombre));
 
         return new BusquedaCondicional(condicionNombreDeCanchaMemo, canchaQuery);
     }

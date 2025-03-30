@@ -2,6 +2,7 @@ package persistencia.repositorios;
 
 import domain.Jugador;
 import persistencia.BusquedaCondicional;
+import persistencia.config.Config;
 import persistencia.daos.DAO;
 
 import javax.persistence.criteria.CriteriaBuilder;
@@ -26,13 +27,18 @@ public class RepoJugadores extends Repositorio<Jugador>{
     }
 
     private BusquedaCondicional condicionNombre(String nombre){
-        CriteriaBuilder criteriaBuilder = criteriaBuilder();
-        CriteriaQuery<Jugador> jugadorQuery = criteriaBuilder.createQuery(Jugador.class);
-        Root<Jugador> condicionRaiz = jugadorQuery.from(Jugador.class);
-        Predicate condicionNombre = criteriaBuilder.equal(condicionRaiz.get("nombre"), nombre);
-        jugadorQuery.where(condicionNombre);
 
-        java.util.function.Predicate<Jugador> condicionNombreMemo = (jugador -> jugador.getNombre().equals(nombre));
+        CriteriaQuery<Jugador> jugadorQuery = null; //TODO: MEJORAR EN TODOS LOS REPOS
+        java.util.function.Predicate<Jugador> condicionNombreMemo = null;
+        if (Config.useDataBase) {
+            CriteriaBuilder criteriaBuilder = criteriaBuilder();
+            jugadorQuery = criteriaBuilder.createQuery(Jugador.class);
+            Root<Jugador> condicionRaiz = jugadorQuery.from(Jugador.class);
+            Predicate condicionNombre = criteriaBuilder.equal(condicionRaiz.get("nombre"), nombre);
+            jugadorQuery.where(condicionNombre);
+        }
+        else
+            condicionNombreMemo = (jugador -> jugador.getNombre().equals(nombre));
 
         return new BusquedaCondicional(condicionNombreMemo, jugadorQuery);
     }
