@@ -1,26 +1,14 @@
-# Usa una imagen base de OpenJDK
+# Usa una imagen base de OpenJDK 8
 FROM openjdk:8-jdk-alpine
-
-# Instalar Maven
-RUN apk update && apk add maven
 
 # Establecer el directorio de trabajo
 WORKDIR /app
 
-# Copiar el archivo pom.xml y las dependencias (esto ayuda a la optimización de la caché de Docker)
-COPY pom.xml .
+# Copiar el archivo .jar con las dependencias
+COPY target/APP-Futbol-1.0-SNAPSHOT-jar-with-dependencies.jar /app/APP-Futbol.jar
 
-# Descargar las dependencias del proyecto
-RUN mvn dependency:go-offline
-
-# Copiar todo el código fuente
-COPY src /app/src
-
-# Compilar el proyecto usando Maven
-RUN mvn clean package
-
-# Exponer el puerto que usará el contenedor (Render usa 10000 por defecto)
+# Exponer el puerto que usará el contenedor
 EXPOSE 10000
 
-# Comando para ejecutar la aplicación
-CMD ["java", "-jar", "target/APP-Futbol-1.0-SNAPSHOT.jar"]
+# Comando para ejecutar la aplicación usando el archivo JAR generado
+CMD ["java", "-jar", "APP-Futbol.jar"]
